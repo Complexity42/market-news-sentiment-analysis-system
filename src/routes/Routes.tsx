@@ -7,6 +7,9 @@ import ProfilePage from "../pages/profile";
 import RestDemoPage from "../pages/rest";
 import TodoListPage from "../pages/todo-list";
 import TemplateListPage from "../pages/template";
+import Search from "@mui/icons-material/Search";
+import SearchBar from "../components/SearchBar";
+import CwkscPage from "../pages/cwksc";
 
 const Pages = () => {
 	return (
@@ -31,7 +34,7 @@ const Pages = () => {
 			<Route path="/rest" element={<RestDemoPage/>} />
 
 			{/** landing page */}
-			<Route path="/*" element={<LandingPage/>} />
+			<Route path="/*" element={<CwkscPage />} />
 		</Routes>
 	);
 }
