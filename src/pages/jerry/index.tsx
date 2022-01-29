@@ -5,6 +5,7 @@ import { KeywordItem } from "../../components/KeywordItem";
 import LoginButton from "../../components/LoginButton";
 import { MyProfileCard } from "../../components/MyProfileCard";
 import { ProfilePreviewCard } from "../../components/ProfilePreviewCard";
+import { Title } from "../../components/Title";
 import "./index.css";
 
 // export react function render
@@ -40,8 +41,6 @@ export default function Jerry() {
 
 	let controller = {
 		changeKeywordUserPreferences: (id: string, is_blocked: boolean, is_subscribed: boolean) => {
-			// keyword.is_blocked = is_blocked;
-			// keyword.is_subscribed = is_subscribed;
 			setKeyword({
 				...keyword,
 				is_blocked: is_blocked,
@@ -52,19 +51,26 @@ export default function Jerry() {
 
 
 	return (
-		<div style={{paddingLeft: '800px'}}>
+		<div style={{ paddingLeft: '800px' }}>
 			{/* <ProfilePreviewCard data={user}></ProfilePreviewCard>
 			<MyProfileCard data={user}></MyProfileCard> */}
-			{/* <CommentCard data={comment}></CommentCard> */}
-			<Card>
-				<CardContent>
-					<KeywordItem data={keyword} controller={controller}></KeywordItem>
-					<KeywordItem data={keyword} controller={controller}></KeywordItem>
-					<KeywordItem data={keyword} controller={controller}></KeywordItem>
 
-				</CardContent>
-			</Card>
-			<br/>
+			{/* <CommentCard data={comment}></CommentCard> */}
+
+			<Title title="Not Interested" show_all>
+				<Card sx={{ minWidth: 275, maxWidth: 500, borderRadius: '0.5rem' }} elevation={4}>
+					<CardContent sx={{ p: '0.6rem 0.5rem 0.6rem 1.4rem !important'}}>
+						<KeywordItem data={keyword} controller={controller}></KeywordItem>
+						<KeywordItem data={keyword} controller={controller}></KeywordItem>
+						<KeywordItem data={keyword} controller={controller}></KeywordItem>
+
+					</CardContent>
+				</Card>
+			</Title>
+			<Title title="Suggestion" show_all>
+			</Title>
+
+			<br />
 			<LoginButton></LoginButton>
 		</div>
 	);
