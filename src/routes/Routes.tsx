@@ -7,6 +7,7 @@ import ProfilePage from "../pages/profile";
 import RestDemoPage from "../pages/rest";
 import TodoListPage from "../pages/todo-list";
 import TemplateListPage from "../pages/template";
+import OscarPage from "../pages/oscar";
 import Jerry from "../pages/jerry";
 
 const Pages = () => {
@@ -32,6 +33,7 @@ const Pages = () => {
 			<Route path="/rest" element={<RestDemoPage/>} />
 
 			<Route path="/jerry" element={<Jerry/>} />
+			<Route path="/oscar" element={<OscarPage/>} />
 
 
 			{/** landing page */}
