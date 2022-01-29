@@ -1,0 +1,26 @@
+div.todo-list-container {
+	padding: 2rem;
+	display: flex;
+	flex-direction: column;
+	row-gap: 2rem;
+}
+
+
+div.todo-list-container > .todo-item {
+	border: 1px solid #ccc;
+	padding: 1rem;
+}
+
+div.todo-list-container > .todo-input {
+	display: flex;
+	flex-direction: column;
+	row-gap: 1rem;
+}
+
+.todo-item.normal-mode .todo-item-edit-mode {
+	display: none;
+}
+
+.todo-item.edit-mode .todo-item-normal-mode {
+	display: none;
+}

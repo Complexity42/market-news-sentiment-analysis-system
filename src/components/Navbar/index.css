@@ -1,0 +1,33 @@
+div.navbar-margin {
+	position: relative;
+	margin-top: 6.75rem;
+}
+
+div.navbar {
+	position: fixed;
+	top: 0;
+	width: calc(100vw - 4rem);
+	background-color: #fff;
+	z-index: 2;
+
+	display: flex;
+	padding: 2rem;
+	border-bottom: 1px solid #ccc;
+	column-gap: 1rem;
+	align-items: center;
+	justify-content: space-between;
+}
+
+div.navbar-home a {
+	font-size: 2rem;
+	font-weight: 700;
+	color: black;
+	text-decoration: none;
+}
+
+div.navbar-home {
+	display: flex;
+	align-items: center;
+	column-gap: 1rem;
+	text-transform: uppercase;
+}

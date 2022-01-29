@@ -1,0 +1,11 @@
+div.template-list-container {
+	padding: 2rem;
+	display: flex;
+	flex-direction: column;
+	row-gap: 1rem;
+}
+
+.template-list-selector {
+	display: flex;
+	flex-direction: column;
+}

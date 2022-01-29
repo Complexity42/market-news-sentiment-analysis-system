@@ -1,0 +1,11 @@
+div.cross-container {
+	padding: 2rem;
+	display: flex;
+	flex-direction: column;
+	row-gap: 2rem;
+}
+
+div.cross-container > * {
+	border: 1px solid #ccc;
+	padding: 1rem;
+}
