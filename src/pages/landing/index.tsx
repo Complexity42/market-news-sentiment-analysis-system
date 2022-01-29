@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import CounterStore from "../../mobx/CounterStore";
 import { Backdrop, Button, Container, Paper, Stack } from "@mui/material";
 import { Card, CardContent } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CommentCard } from "../../components/CommentCard";
 import { KeywordItem } from "../../components/KeywordItem";
 import LoginButton from "../../components/LoginButton";
@@ -17,6 +17,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, User } from "firebase/auth";
 import { collection, query, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
 import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { News } from "../../types/News";
+import { ConstructionOutlined } from "@mui/icons-material";
 
 
 const LandingPage = observer(() => {
@@ -68,9 +70,6 @@ const LandingPage = observer(() => {
 		if (userData == undefined) return;
 
 		setUser(userData as IProfile);
-
-		console.log(userData);
-
 	};
 
 	async function GetKeywords() {
@@ -96,7 +95,7 @@ const LandingPage = observer(() => {
 	}, [user]);
 
 	useEffect(() => { // sync to firestore
-		console.log(keywords);
+		// console.log(keywords);
 	}, [keywords]);
 
 	let comment = {
@@ -126,6 +125,18 @@ const LandingPage = observer(() => {
 			});
 		}
 	}
+
+	const previousState = useRef<News[]>();
+
+	useEffect(() => {
+		if (news) {
+			if (news.length > (previousState?.current?.length || 0)) {
+				console.log("something updated.");
+			}
+
+			previousState.current = news as any;
+		}
+	}, [news]);
 
 	return (
 
