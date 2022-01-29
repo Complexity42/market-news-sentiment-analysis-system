@@ -1,3 +1,41 @@
 div.landing-container {
 	padding: 2rem;
 }
+
+body {
+	height: 100vh;
+	overflow: hidden;
+}
+
+* {
+	scrollbar-width: thin;          /* "auto" or "thin" */
+  	scrollbar-color: #EEE white;   /* scroll thumb and track */
+}
+/* Works on Firefox */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: #EEE white;
+  }
+  
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+	width: 3px;
+}
+
+*::-webkit-scrollbar-track {
+	background: white;
+}
+
+*::-webkit-scrollbar-thumb {
+	background-color: #EEE;
+	border-radius: 20px;
+	border: 1px solid white;
+}
+
+.landing-page-container {
+	max-width: 500px;
+	min-width: 200px;
+	overflow-x: hidden;
+	overflow-y: visible;
+	margin: 0 1rem !important;
+}
