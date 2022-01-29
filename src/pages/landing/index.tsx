@@ -15,7 +15,7 @@ import NewsCard from "../../components/NewsCard";
 import SearchBar from "../../components/SearchBar";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, User } from "firebase/auth";
-import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
 
 
 const LandingPage = observer(() => {
@@ -31,52 +31,70 @@ const LandingPage = observer(() => {
 		updated_at: "2020-01-01",
 		avatar: "https://source.unsplash.com/random/400x200",
 		uuid: "123",
-		subscribed_keywords: ["react", "typescript", "javascript"],
+		subscribed_keywords: [],
 		filtered_keywords: []
+	});
+
+	// keywords state
+	const [keywords, setKeywords] = useState<{ [Key: string]: string }>({
+		react: "React",
+		typescript: "Typescript",
+		javascript: "Javascript"
 	});
 
 	async function CreateAccount(user: User) {
 		let ee = await getDoc(doc(db, "User", user.uid));
-
-		if (ee.data() == undefined) {
+		let userData = ee.data();
+		if (userData == undefined) {
 			const send = {
-				Name: user.displayName,
-				Description: 'A new user',
-				Created_At: user.metadata.creationTime,
-				Update_At: user.metadata.lastSignInTime,
-				Subscribed_Keywords: ['react', 'typescript', 'javascript'],
+				name: user.displayName,
+				bio: 'A new user',
+				created_at: user.metadata.creationTime,
+				update_at: user.metadata.lastSignInTime,
+				avatar: user.photoURL,
+				subscribed_keywords: ['react', 'typescript', 'javascript'],
 				filtered_keywords: [],
+				uuid: user.uid
 			};
 			await setDoc(doc(db, "User", user.uid), send);
 			ee = await getDoc(doc(db, "User", user.uid));
+			userData = ee.data();
 		}
 
-		setUser({
-			name: user.displayName || '',
-			bio: ee.data()?.description || '',
-			created_at: ee.data()?.ceated_at || '',
-			updated_at: ee.data()?.update_at || '',
-			avatar: user.photoURL || '',
-			uuid: user.uid || '',
-			subscribed_keywords: ee.data()?.subscribed_keywords || [],
-			filtered_keywords: ee.data()?.filtered_keywords || [],
-		});
+		if (userData == undefined) return;
+
+		setUser(userData as IProfile);
+
+		console.log(userData);
+
 	};
 
-	useEffect(() => {
-		if (userProfile) CreateAccount(userProfile);
+	async function GetKeywords() {
+		const querySnapshot = await getDocs(collection(db, "Keywords"));
+
+		let local_keywords: { [Key: string]: string } = {};
+		querySnapshot.forEach((doc: { id: string; data: () => any; }) => {
+			local_keywords[doc.id] = doc.data().keyword;
+		});
+
+		setKeywords(local_keywords);
+	}
+
+	useEffect(() => { // firestore to local
+		if (userProfile) {
+			CreateAccount(userProfile);
+			GetKeywords();
+		}
 	}, [userProfile]);
 
-	// let user = {
-	// 	name: userProfile?.displayName,
-	// 	bio: "My name is Giovanni Giorgio, but everybody calls me Giorgio",
-	// 	created_at: "2020-01-01",
-	// 	updated_at: "2020-01-01",
-	// 	avatar: "https://source.unsplash.com/random/400x200",
-	// 	uuid: "123",
-	// 	subscribed_keywords: ["react", "typescript", "javascript"],
-	// 	filtered_keywords: []
-	// };
+	useEffect(() => { // sync to firestore
+		if (userProfile && userProfile.uid == user.uuid) setDoc(doc(db, "User", userProfile.uid), user);
+	}, [user]);
+
+	useEffect(() => { // sync to firestore
+		console.log(keywords);
+
+	}, [keywords]);
 
 	let comment = {
 		updated_at: "2022-1-19 11:45",
@@ -86,22 +104,22 @@ const LandingPage = observer(() => {
 		content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 	}
 
-	let keyword_c = {
-		id: "react",
-		content: 'React',
-		is_blocked: false,
-		is_subscribed: true
-	}
-
-	// usestate keyword
-	const [keyword, setKeyword] = useState(keyword_c);
-
 	let controller = {
 		changeKeywordUserPreferences: (id: string, is_blocked: boolean, is_subscribed: boolean) => {
-			setKeyword({
-				...keyword,
-				is_blocked: is_blocked,
-				is_subscribed: is_subscribed
+			setUser((prev) => {
+				let new_user = { ...prev };
+
+				new_user.subscribed_keywords = new_user.subscribed_keywords.filter(x => x != id);
+				new_user.filtered_keywords = new_user.filtered_keywords.filter(x => x != id);
+
+				if (is_blocked) {
+					new_user.filtered_keywords.push(id);
+				}
+
+				if (is_subscribed) {
+					new_user.subscribed_keywords.push(id);
+				}
+				return new_user;
 			});
 		}
 	}
@@ -144,39 +162,49 @@ const LandingPage = observer(() => {
 						<Title title="Profile" show_all>
 							<MyProfileCard data={user}></MyProfileCard>
 						</Title>
-						<Title title="Subscribed" show_all>
+						<Title title="Subscribed" show_all can_hide>
 							<Card sx={{ minWidth: 275, maxWidth: 500, borderRadius: '0.5rem' }} elevation={4}>
 								<CardContent sx={{ p: '0.6rem 0.5rem 0.6rem 1.4rem !important' }}>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
+									{
+										user.subscribed_keywords.map(id => {
+											let content: string = keywords[id];
+											return (
+												<KeywordItem key={id} data={{ id, content, is_blocked: false, is_subscribed: true }} controller={controller}></KeywordItem>
+											)
+										})
+									}
 								</CardContent>
 							</Card>
 						</Title>
-						<Title title="Not Interested" show_all>
+						<Title title="Not Interested" show_all can_hide>
+							{/* show_all={!!user.filtered_keywords.length}  */}
 							<Card sx={{ minWidth: 275, maxWidth: 500, borderRadius: '0.5rem' }} elevation={4}>
 								<CardContent sx={{ p: '0.6rem 0.5rem 0.6rem 1.4rem !important' }}>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
+									{
+										user.filtered_keywords.map(id => {
+											let content: string = keywords[id];
+											return (
+												<KeywordItem key={id} data={{ id, content, is_blocked: true, is_subscribed: false }} controller={controller}></KeywordItem>
+											)
+										})
+									}
 								</CardContent>
 							</Card>
 						</Title>
-						<Title title="Suggestion" show_all>
+						<Title title="Suggestion" show_all can_hide>
 							<Card sx={{ minWidth: 275, maxWidth: 500, borderRadius: '0.5rem' }} elevation={4}>
 								<CardContent sx={{ p: '0.6rem 0.5rem 0.6rem 1.4rem !important' }}>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
-									<KeywordItem data={keyword} controller={controller}></KeywordItem>
+									{
+										Object
+											.keys(keywords)
+											.filter(id => !(user.filtered_keywords.includes(id) || user.subscribed_keywords.includes(id)))
+											.map(id => {
+												let content: string = keywords[id];
+												return (
+													<KeywordItem key={id} data={{ id, content, is_blocked: false, is_subscribed: false }} controller={controller}></KeywordItem>
+												)
+											})
+									}
 								</CardContent>
 							</Card>
 						</Title>
