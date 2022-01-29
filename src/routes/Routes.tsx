@@ -7,6 +7,7 @@ import ProfilePage from "../pages/profile";
 import RestDemoPage from "../pages/rest";
 import TodoListPage from "../pages/todo-list";
 import TemplateListPage from "../pages/template";
+import OscarPage from "../pages/oscar";
 
 const Pages = () => {
 	return (
@@ -31,7 +32,7 @@ const Pages = () => {
 			<Route path="/rest" element={<RestDemoPage/>} />
 
 			{/** landing page */}
-			<Route path="/*" element={<LandingPage/>} />
+			<Route path="/*" element={<OscarPage/>} />
 		</Routes>
 	);
 }
