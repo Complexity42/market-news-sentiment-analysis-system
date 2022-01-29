@@ -66,10 +66,10 @@ const NewsCard = (props: INewsCardProps) => {
     }, [isShowingCommentSection]);
 
     return (
-        <Box sx={{ maxWidth: "400px;" }}>
+        <Box sx={{ maxWidth: "500px;", mb: '1.7rem' }}>
             <Stack flexDirection="column" rowGap="1rem" alignItems="flex-end">
                 <Card sx={{ borderLeft: ".7rem solid #88cc88", borderRadius: ".5rem" }} elevation={4} >
-                    <a href={props.source_url} style={{ textDecoration: "unset" }} target="_blank">
+                    <a href={props.source_url} style={{ textDecoration: "unset", color: "black" }} target="_blank">
                         <CardContent>
                             <Typography sx={{ fontWeight: 600 }}>
                                 {props.title}
@@ -93,9 +93,9 @@ const NewsCard = (props: INewsCardProps) => {
                                 }
                             </Stack>
                         </CardContent>
-                    </a >
+                    </a>
 
-                    <Divider sx={{ my: "1rem" }}></Divider>
+                    <Divider sx={{ mt: '0.7rem', mb: "0rem" }}></Divider>
 
                     <CardActions>
                         <Stack flexDirection="row" justifyContent="space-between" alignItems="center" sx={{ width: "100%" }}>

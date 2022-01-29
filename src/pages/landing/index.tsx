@@ -11,6 +11,7 @@ import LoginButton from "../../components/LoginButton";
 import { MyProfileCard } from "../../components/MyProfileCard";
 import { ProfilePreviewCard } from "../../components/ProfilePreviewCard";
 import { Title } from "../../components/Title";
+import NewsCard from "../../components/NewsCard";
 
 const LandingPage = observer(() => {
 	let user = {
@@ -61,7 +62,27 @@ const LandingPage = observer(() => {
 						sx={{
 							backgroundColor: 'white'
 						}}>
-						<MyProfileCard data={user}></MyProfileCard>
+						{/* <MyProfileCard data={user}></MyProfileCard> */}
+						<NewsCard
+							news_id="random_id"
+							title="John Doe Antler"
+							description="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur repellat officia adipisci earum soluta, qui cumque cum odit neque in quasi aut delectus praesentium esse similique eaque corrupti incidunt eligendi!"
+							source_date="4 hours ago"
+							source_url="www.google.com"
+							source_icon_url="https://source.unsplash.com/random/400x200"
+							source_name="John Doe"
+							keywords={["pardun", "peko", "nanora"]}
+						/>
+						<NewsCard
+							news_id="random_id"
+							title="John Doe Antler"
+							description="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur repellat officia adipisci earum soluta, qui cumque cum odit neque in quasi aut delectus praesentium esse similique eaque corrupti incidunt eligendi!"
+							source_date="4 hours ago"
+							source_url="www.google.com"
+							source_icon_url="https://source.unsplash.com/random/400x200"
+							source_name="John Doe"
+							keywords={["pardun", "peko", "nanora"]}
+						/>
 					</Container>
 					<Container
 						className="landing-page-container"
