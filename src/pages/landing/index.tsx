@@ -18,8 +18,6 @@ import { getAuth, User } from "firebase/auth";
 import { collection, query, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { News } from "../../types/News";
-import { ConstructionOutlined } from "@mui/icons-material";
-
 
 const LandingPage = observer(() => {
 	const auth = useMemo(() => getAuth(), []);
@@ -150,7 +148,18 @@ const LandingPage = observer(() => {
 						}}>
 						<SearchBar />
 						{
-							news && news.map((e) => (
+							news && (news as any as News[]).sort((a, b) => {
+									const i = new Date(a.source_date);
+									const j = new Date(b.source_date);
+									if (i > j) {
+										return -1;
+									} else if (i < j) {
+										return 1;
+									} else {
+										return 0;
+									}
+								})
+							.map((e) => (
 								<NewsCard
 									news_id={e.id}
 									title={e.title}
