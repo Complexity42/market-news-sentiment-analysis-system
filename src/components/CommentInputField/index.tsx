@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -12,15 +12,34 @@ import Stack from "@mui/material/Stack";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
+import { addDoc, updateDoc, deleteDoc, collection, doc, getFirestore, query } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 
-const CommentInputField = () => {
+interface ICommentInputFieldProps {
+    news_id: string;
+}
+
+const CommentInputField = (props: ICommentInputFieldProps) => {
 
     const [isFocus, setFocus] = useState(false);
 
+	const auth = useMemo(() => getAuth(), []);
+	const [user, loading, error] = useAuthState(auth);
+	const firestore = useMemo(() => getFirestore(), []);
+	const collectionRef = useMemo(() => collection(firestore, 'Comments'), []);
     const [comment, setComment] = useState("");
 
     const onSend = () => {
-        console.log("comment should sent. content:", comment)
+        if (user) {
+            addDoc(collectionRef, {
+                news_id: props.news_id,
+                content: comment,
+                created_by: user.uid,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+            });
+        }
         setComment("");
     }
 

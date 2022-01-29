@@ -17,12 +17,15 @@ import Divider from "@mui/material/Divider";
 import { useState } from "react";
 import { ICommentProps } from "../Comment";
 import CommentSectionCard from "../CommentSectionCard";
+import { where } from "firebase/firestore";
+import { collection, query, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 interface INewsCardProps {
     // for passing the reference for rating and bookmarking.
     news_id: string;
     title: string;
-    description: string;
+    content: string;
     keywords: string[];
     source_date: string;
     source_url: string;
@@ -32,28 +35,9 @@ interface INewsCardProps {
 
 const NewsCard = (props: INewsCardProps) => {
 
-    const [ comments, setComments ] = useState<ICommentProps[]>([]);
-
-    useEffect(() => {
-        setComments([
-            {
-                author_name: "John Doe Antler",
-                content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis debitis, eos provident saepe dolor dolore eligendi placeat alias vel quia voluptates sed quaerat delectus fugit dolores a sit modi labore.",
-                likes: 231,
-                created_at: "3 hours ago",
-            }, {
-                author_name: "Jane Doe Antill",
-                content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Impedit ab, earum saepe unde optio nisi quas dolores? Nihil asperiores nemo vel similique maxime vero voluptate id voluptatem eius saepe! Molestiae!",
-                likes: 71,
-                created_at: "1 hours ago",
-            }, {
-                author_name: "Sawa Lai",
-                content: "quo culpa eligendi earum numquam veniam totam quas, ratione atque, autem mollitia beatae ut alias adipisci laboriosam dolore accusantium rerum blanditiis.",
-                likes: 71,
-                created_at: "1 hours ago",
-            }
-        ]);
-    }, []);
+	const firestore = useMemo(() => getFirestore(), []);
+	const collectionRef = useMemo(() => collection(firestore, 'Comments'), []);
+	const [comments, loading, error] = useCollectionData(query(collectionRef, where("news_id", "==", props.news_id)), {idField: 'id'});
 
     const [isShowingCommentSection, setShowingCommentSection] = useState<boolean>(false);
 
@@ -68,7 +52,7 @@ const NewsCard = (props: INewsCardProps) => {
     return (
         <Box sx={{ maxWidth: "500px;", mb: '1.7rem' }}>
             <Stack flexDirection="column" rowGap="1rem" alignItems="flex-end">
-                <Card sx={{ borderLeft: ".7rem solid #88cc88", borderRadius: ".5rem" }} elevation={4} >
+                <Card sx={{ borderLeft: ".7rem solid #88cc88", borderRadius: ".5rem", width: "100%" }} elevation={4} >
                     <a href={props.source_url} style={{ textDecoration: "unset", color: "black" }} target="_blank">
                         <CardContent>
                             <Typography sx={{ fontWeight: 600 }}>
@@ -84,7 +68,7 @@ const NewsCard = (props: INewsCardProps) => {
                             
 
                             <Typography color="text.secondary">
-                                {props.description}
+                                {props.content}
                             </Typography>
 
                             <Stack columnGap=".5rem" rowGap=".5rem" flexWrap="wrap" flexDirection="row" sx={{ mt: ".5rem" }}>
@@ -137,7 +121,7 @@ const NewsCard = (props: INewsCardProps) => {
 
                 {
                     isShowingCommentSection && <Box sx={{ width: "90%"}}>
-                        <CommentSectionCard news_id={props.news_id} comments={comments} />
+                        <CommentSectionCard news_id={props.news_id} comments={comments as any } />
                     </Box>
                 }
             </Stack>

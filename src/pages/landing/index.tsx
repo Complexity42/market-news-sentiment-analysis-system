@@ -15,13 +15,17 @@ import NewsCard from "../../components/NewsCard";
 import SearchBar from "../../components/SearchBar";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, User } from "firebase/auth";
-import { collection, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
+import { collection, query, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 
 const LandingPage = observer(() => {
 	const auth = useMemo(() => getAuth(), []);
 	const [userProfile, loading, error] = useAuthState(auth);
-	const db = getFirestore();
+
+	const db = useMemo(() => getFirestore(), []);
+	const collectionRef = useMemo(() => collection(db, 'News'), []);
+	const [news, isNewsLoading, isNewsError] = useCollectionData(query(collectionRef), {idField: 'id'});
 
 	// user state
 	const [user, setUser] = useState<IProfile>({
@@ -93,7 +97,6 @@ const LandingPage = observer(() => {
 
 	useEffect(() => { // sync to firestore
 		console.log(keywords);
-
 	}, [keywords]);
 
 	let comment = {
@@ -103,7 +106,7 @@ const LandingPage = observer(() => {
 		news_source_url: "https://www.google.com",
 		content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 	}
-
+	
 	let controller = {
 		changeKeywordUserPreferences: (id: string, is_blocked: boolean, is_subscribed: boolean) => {
 			setUser((prev) => {
@@ -135,26 +138,20 @@ const LandingPage = observer(() => {
 							backgroundColor: 'white'
 						}}>
 						<SearchBar />
-						<NewsCard
-							news_id="random_id"
-							title="John Doe Antler"
-							description="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur repellat officia adipisci earum soluta, qui cumque cum odit neque in quasi aut delectus praesentium esse similique eaque corrupti incidunt eligendi!"
-							source_date="4 hours ago"
-							source_url="www.google.com"
-							source_icon_url="https://source.unsplash.com/random/400x200"
-							source_name="John Doe"
-							keywords={["pardun", "peko", "nanora"]}
-						/>
-						<NewsCard
-							news_id="random_id"
-							title="John Doe Antler"
-							description="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur repellat officia adipisci earum soluta, qui cumque cum odit neque in quasi aut delectus praesentium esse similique eaque corrupti incidunt eligendi!"
-							source_date="4 hours ago"
-							source_url="www.google.com"
-							source_icon_url="https://source.unsplash.com/random/400x200"
-							source_name="John Doe"
-							keywords={["pardun", "peko", "nanora"]}
-						/>
+						{
+							news && news.map((e) => (
+								<NewsCard
+									news_id={e.id}
+									title={e.title}
+									content={e.content}
+									source_date={e.source_date}
+									source_url={e.source_url}
+									source_icon_url="https://source.unsplash.com/random/400x200"
+									source_name={e.source_name}
+									keywords={e.keywords}
+								/>
+							))
+						}
 					</Container>
 					<Container
 						className="landing-page-container"
