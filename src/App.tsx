@@ -6,9 +6,9 @@ import Footer from "./components/Footer";
 const App = () => {
   return (
     <BrowserRouter>
-      <Navbar />
+      {/* <Navbar /> */}
       <Routes />
-      <Footer />
+      {/* <Footer /> */}
     </BrowserRouter>
   )
 }

@@ -7,6 +7,7 @@ import ProfilePage from "../pages/profile";
 import RestDemoPage from "../pages/rest";
 import TodoListPage from "../pages/todo-list";
 import TemplateListPage from "../pages/template";
+import Jerry from "../pages/jerry";
 
 const Pages = () => {
 	return (
@@ -29,6 +30,9 @@ const Pages = () => {
 			{/** mobx example */}
 			<Route path="/cross" element={<CrossPage/>} />
 			<Route path="/rest" element={<RestDemoPage/>} />
+
+			<Route path="/jerry" element={<Jerry/>} />
+
 
 			{/** landing page */}
 			<Route path="/*" element={<LandingPage/>} />
