@@ -1,7 +1,6 @@
-import { Avatar, Box, Button, Card, CardActions, CardContent, Grid, Stack, Typography } from "@mui/material";
-import { flexbox } from "@mui/system";
-import { getAuth, signOut, User } from "firebase/auth";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Avatar, Button, Card, CardContent, Stack, Typography } from "@mui/material";
+import { getAuth, signOut } from "firebase/auth";
+import { useCallback, useMemo } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { IProfile } from "../ProfilePreviewCard";
 
@@ -31,8 +30,6 @@ export function MyProfileCard(props: { data: IProfile }) {
 	return (
 		<Card sx={{ minWidth: 275, maxWidth: 500, borderRadius: '0.5rem' }} elevation={4}>
 			<CardContent sx={{ p: '1rem !important' }}>
-
-
 				<Stack direction="row" spacing={2}>
 					<Avatar alt="Hi" sx={{ width: '7rem', height: '7rem' }} src={props.data.avatar} />
 					<Stack direction="column" justifyContent="flex-start">
@@ -43,7 +40,6 @@ export function MyProfileCard(props: { data: IProfile }) {
 				<Stack direction="row" spacing={2} justifyContent="right">
 					<Button variant="contained" onClick={onClick}>Logout</Button>
 				</Stack>
-
 			</CardContent>
 		</Card>
 	);
