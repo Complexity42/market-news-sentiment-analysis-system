@@ -9,6 +9,7 @@ import TodoListPage from "../pages/todo-list";
 import TemplateListPage from "../pages/template";
 import OscarPage from "../pages/oscar";
 import Jerry from "../pages/jerry";
+import CwkscPage from "../pages/cwksc";
 
 const Pages = () => {
 	return (
@@ -37,7 +38,7 @@ const Pages = () => {
 
 
 			{/** landing page */}
-			<Route path="/*" element={<LandingPage/>} />
+			<Route path="/*" element={<CwkscPage />} />
 		</Routes>
 	);
 }
