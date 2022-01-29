@@ -68,7 +68,7 @@ const NewsCard = (props: INewsCardProps) => {
                             
 
                             <Typography color="text.secondary">
-                                {props.content}
+                                {props.content.length > 200 ? props.content.slice(0,200) + "..." : props.content}
                             </Typography>
 
                             <Stack columnGap=".5rem" rowGap=".5rem" flexWrap="wrap" flexDirection="row" sx={{ mt: ".5rem" }}>
