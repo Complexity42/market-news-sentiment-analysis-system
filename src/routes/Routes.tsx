@@ -35,10 +35,11 @@ const Pages = () => {
 
 			<Route path="/jerry" element={<Jerry/>} />
 			<Route path="/oscar" element={<OscarPage/>} />
+			<Route path="/cwksc" element={<CwkscPage />} />
 
 
 			{/** landing page */}
-			<Route path="/*" element={<CwkscPage />} />
+			<Route path="/*" element={<LandingPage/>} />
 		</Routes>
 	);
 }

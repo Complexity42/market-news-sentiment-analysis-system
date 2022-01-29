@@ -7,7 +7,8 @@ export interface IProfile {
 	updated_at: string,
 	avatar: string,
 	uuid: string,
-	subscribed_keywords: string[]
+	subscribed_keywords: string[],
+	filtered_keywords: string[]
 };
 
 export function ProfilePreviewCard(props: {data: IProfile}) {

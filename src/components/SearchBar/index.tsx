@@ -33,16 +33,14 @@ const CardContentStyled = styled(CardContent)(`
 
 const SearchBar = () => {
 	return (
-		<div>
-			<Card sx={{ minWidth: 128, maxWidth: 256, borderRadius: 2 }}>
-				<CardContentStyled >
-					<Stack flexDirection="row" alignItems="center" columnGap=".5rem">
-						<SearchIcon  />					
-						<TextField label="" size="small" variant="standard" sx={{ margin: 0 }} />
-					</Stack>
- 				</CardContentStyled>
-			</Card>
-		</div>
+		<Card sx={{ minWidth: 128, maxWidth: 500, borderRadius: '.5rem', marginBottom: '1.7rem' }}>
+			<CardContentStyled >
+				<Stack flexDirection="row" alignItems="center" columnGap=".5rem">
+					<SearchIcon sx={{ml: '0.6rem'}} />
+					<TextField label="" fullWidth variant="standard" sx={{ mr: '1rem', ml: '0.5rem' }} />
+				</Stack>
+			</CardContentStyled>
+		</Card>
 	);
 };
 

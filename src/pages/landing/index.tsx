@@ -2,27 +2,81 @@ import { Link } from "react-router-dom";
 import "./index.css";
 import { observer } from "mobx-react";
 import CounterStore from "../../mobx/CounterStore";
-import { Container, Stack } from "@mui/material";
+import { Backdrop, Button, Container, Paper, Stack } from "@mui/material";
 import { Card, CardContent } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CommentCard } from "../../components/CommentCard";
 import { KeywordItem } from "../../components/KeywordItem";
 import LoginButton from "../../components/LoginButton";
 import { MyProfileCard } from "../../components/MyProfileCard";
-import { ProfilePreviewCard } from "../../components/ProfilePreviewCard";
+import { IProfile, ProfilePreviewCard } from "../../components/ProfilePreviewCard";
 import { Title } from "../../components/Title";
 import NewsCard from "../../components/NewsCard";
+import SearchBar from "../../components/SearchBar";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { getAuth, User } from "firebase/auth";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+
 
 const LandingPage = observer(() => {
-	let user = {
+	const auth = useMemo(() => getAuth(), []);
+	const [userProfile, loading, error] = useAuthState(auth);
+	const db = getFirestore();
+
+	// user state
+	const [user, setUser] = useState<IProfile>({
 		name: "Giorgio",
 		bio: "My name is Giovanni Giorgio, but everybody calls me Giorgio",
 		created_at: "2020-01-01",
 		updated_at: "2020-01-01",
 		avatar: "https://source.unsplash.com/random/400x200",
 		uuid: "123",
-		subscribed_keywords: ["react", "typescript", "javascript"]
+		subscribed_keywords: ["react", "typescript", "javascript"],
+		filtered_keywords: []
+	});
+
+	async function CreateAccount(user: User) {
+		let ee = await getDoc(doc(db, "User", user.uid));
+
+		if (ee.data() == undefined) {
+			const send = {
+				Name: user.displayName,
+				Description: 'A new user',
+				Created_At: user.metadata.creationTime,
+				Update_At: user.metadata.lastSignInTime,
+				Subscribed_Keywords: ['react', 'typescript', 'javascript'],
+				filtered_keywords: [],
+			};
+			await setDoc(doc(db, "User", user.uid), send);
+			ee = await getDoc(doc(db, "User", user.uid));
+		}
+
+		setUser({
+			name: user.displayName || '',
+			bio: ee.data()?.description || '',
+			created_at: ee.data()?.ceated_at || '',
+			updated_at: ee.data()?.update_at || '',
+			avatar: user.photoURL || '',
+			uuid: user.uid || '',
+			subscribed_keywords: ee.data()?.subscribed_keywords || [],
+			filtered_keywords: ee.data()?.filtered_keywords || [],
+		});
 	};
+
+	useEffect(() => {
+		if (userProfile) CreateAccount(userProfile);
+	}, [userProfile]);
+
+	// let user = {
+	// 	name: userProfile?.displayName,
+	// 	bio: "My name is Giovanni Giorgio, but everybody calls me Giorgio",
+	// 	created_at: "2020-01-01",
+	// 	updated_at: "2020-01-01",
+	// 	avatar: "https://source.unsplash.com/random/400x200",
+	// 	uuid: "123",
+	// 	subscribed_keywords: ["react", "typescript", "javascript"],
+	// 	filtered_keywords: []
+	// };
 
 	let comment = {
 		updated_at: "2022-1-19 11:45",
@@ -62,7 +116,7 @@ const LandingPage = observer(() => {
 						sx={{
 							backgroundColor: 'white'
 						}}>
-						{/* <MyProfileCard data={user}></MyProfileCard> */}
+						<SearchBar />
 						<NewsCard
 							news_id="random_id"
 							title="John Doe Antler"
@@ -128,39 +182,16 @@ const LandingPage = observer(() => {
 						</Title>
 					</Container>
 				</Stack>
-			</Container >
+			</Container>
+			<Backdrop
+				sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+				open={userProfile == null}
+			>
+				<Paper>
+					<LoginButton></LoginButton>
+				</Paper>
+			</Backdrop>
 		</div >
-		// <div className="landing-container">
-		// 	it is landing page.
-
-		// 	<div>
-		// 		go to <Link to="/profile">PROFILE</Link>.
-		// 	</div>
-
-		// 	<div>
-		// 		go to <Link to="/demo-list">DEMO</Link>.
-		// 	</div>
-
-		// 	<div>
-		// 		go to <Link to="/template-list">TEMPLATE</Link>.
-		// 	</div>
-
-		// 	<div>
-		// 		go to <Link to="/form">FORM</Link>.
-		// 	</div>
-
-		// 	<div>
-		// 		go to <Link to="/todo">TODO</Link>.
-		// 	</div>
-
-		// 	<div>
-		// 		go to <Link to="/cross">CROSS</Link>.
-		// 	</div>
-
-		// 	<div>
-		// 		go to <Link to="/rest">REST</Link>.
-		// 	</div>
-		// </div>
 	);
 });
 
