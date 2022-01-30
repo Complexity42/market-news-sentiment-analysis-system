@@ -31,6 +31,7 @@ interface INewsCardProps {
     source_url: string;
     source_icon_url: string;
     source_name: string;
+    is_positive: boolean;
 }
 
 const NewsCard = (props: INewsCardProps) => {
@@ -52,7 +53,7 @@ const NewsCard = (props: INewsCardProps) => {
     return (
         <Box sx={{ maxWidth: "500px;", mb: '1.7rem' }}>
             <Stack flexDirection="column" rowGap="1rem" alignItems="flex-end">
-                <Card sx={{ borderLeft: ".7rem solid #88cc88", borderRadius: ".5rem", width: "100%" }} elevation={4} >
+                <Card sx={{ borderLeft: ".7rem solid " + (props.is_positive ? "#88cc88" : "#cc8888"), borderRadius: ".5rem", width: "100%" }} elevation={4} >
                     <a href={props.source_url} style={{ textDecoration: "unset", color: "black" }} target="_blank">
                         <CardContent>
                             <Typography sx={{ fontWeight: 600 }}>

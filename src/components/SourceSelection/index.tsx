@@ -9,7 +9,7 @@ import ListItem from '@mui/material/ListItem';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { getFirestore, collection, query } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
@@ -19,33 +19,38 @@ const SourceSelection = () => {
 	const db = useMemo(() => getFirestore(), []);
 	const collectionRef = useMemo(() => collection(db, 'SourceCollection'), []);
 	const [sourceCollectionList, isSourceCollectionListLoading, isSourceCollectionListError] = useCollectionData(query(collectionRef), { idField: 'id' });
-	console.log(sourceCollectionList, isSourceCollectionListLoading, isSourceCollectionListError);
+
+	useEffect(() => {
+		console.log(sourceCollectionList);
+		if (sourceCollectionList) {
+		console.log(sourceCollectionList[0]);
+		}
+	}, [sourceCollectionList]);
 
 	return (
 		<>
 			{
 				sourceCollectionList && sourceCollectionList.map((sourceCollection: any) => 
-					<Accordion >
+					<Accordion key={sourceCollection.name}>
 						<AccordionSummary
 							expandIcon={<ExpandMoreIcon />}
 							aria-controls="panel1a-content"
 						>
-							<Typography> sourceCollection.name </Typography>
+							<Typography> {sourceCollection.name} </Typography>
 						</AccordionSummary>
-						<AccordionDetails>
 
+						<AccordionDetails>
 							<List>
-								<ListItem disablePadding>
+								<ListItem>
 									<FormGroup>
 										{
-											sourceCollection.sources && sourceCollection.sources.map((source: any) => {
-												<FormControlLabel control={<Checkbox defaultChecked />} label={source} />
-											})
+											sourceCollection.sources && sourceCollection.sources.map((source: any) => (
+												<FormControlLabel key={source} control={<Checkbox defaultChecked />} label={source} />
+											))
 										}
 									</FormGroup>
 								</ListItem>
 							</List>
-
 						</AccordionDetails>
 					</Accordion>
 				)

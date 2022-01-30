@@ -33,8 +33,8 @@ const CommentInputField = (props: ICommentInputFieldProps) => {
     const onSend = () => {
         if (user) {
             addDoc(collectionRef, {
-                news_id: props.news_id,
                 content: comment,
+                news_id: props.news_id,
                 created_by: user.uid,
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString(),
@@ -46,7 +46,7 @@ const CommentInputField = (props: ICommentInputFieldProps) => {
     return (
         <ListItem>
             <ListItemAvatar>
-                <Avatar alt="default user icon" src="https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png" />
+                <Avatar alt="default user icon" src={user?.photoURL || "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"} />
             </ListItemAvatar>
 
             <ListItemText>

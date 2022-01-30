@@ -6,8 +6,8 @@ const store = observable<{
     updateUsers: (users: User[]) => void
 }>({
     users: [],
-    updateUsers: action((users: User[]) => {
-        store.users = users;
+    updateUsers: action((_users: User[]) => {
+        store.users = _users;
     })
 });
 

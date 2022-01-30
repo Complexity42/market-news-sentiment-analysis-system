@@ -183,6 +183,7 @@ const LandingPage = () => {
 									source_icon_url="https://source.unsplash.com/random/400x200"
 									source_name={e.source_name}
 									keywords={e.keywords}
+									is_positive={!!e.is_positive}
 								/>
 							))
 						}

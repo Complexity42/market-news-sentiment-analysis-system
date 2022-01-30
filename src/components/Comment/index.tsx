@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 
 export interface ICommentProps {
     author_name: string;
+    icon_url: string;
     content: string;
     likes: number;
     created_at: string;
@@ -18,7 +19,7 @@ const Comment = (props: ICommentProps) => {
     return (
         <ListItem alignItems="flex-start">
             <ListItemAvatar>
-                <Avatar alt="default user icon" src="https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png" />
+                <Avatar alt="default user icon" src={props.icon_url} />
             </ListItemAvatar>
 
             <ListItemText

@@ -8,4 +8,5 @@ export interface News {
     source_url: string;
     created_at: string;
     updated_at: string;
+    is_positive: boolean;
 }
