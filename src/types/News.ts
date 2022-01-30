@@ -9,4 +9,5 @@ export interface News {
     created_at: string;
     updated_at: string;
     is_positive: boolean;
+    summary: string;
 }

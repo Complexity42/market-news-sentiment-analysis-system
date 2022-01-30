@@ -11,7 +11,6 @@ import LoginButton from "../../components/LoginButton";
 import { MyProfileCard } from "../../components/MyProfileCard";
 import { IProfile, ProfilePreviewCard } from "../../components/ProfilePreviewCard";
 import { Title } from "../../components/Title";
-import NewsCard from "../../components/NewsCard";
 import SearchBar from "../../components/SearchBar";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, User } from "firebase/auth";
@@ -21,14 +20,14 @@ import { News } from "../../types/News";
 import UserStore from "../../mobx/UserStore";
 import { User as UserType } from "../../types/User";
 import SourceSelection from "../../components/SourceSelection";
+import LeftPanel from "../../components/LeftPanel";
 
 const LandingPage = () => {
+
 	const auth = useMemo(() => getAuth(), []);
 	const [userProfile, loading, error] = useAuthState(auth);
 
 	const db = useMemo(() => getFirestore(), []);
-	const collectionRef = useMemo(() => collection(db, 'News'), []);
-	const [news, isNewsLoading, isNewsError] = useCollectionData(query(collectionRef), {idField: 'id'});
 
 	const userCollectionRef = useMemo(() => collection(db, 'User'), []);
 	const [users, isUsersLoading, isUsersError] = useCollectionData(query(userCollectionRef), {idField: 'id'});
@@ -136,17 +135,7 @@ const LandingPage = () => {
 		}
 	}
 
-	const previousState = useRef<News[]>();
 
-	useEffect(() => {
-		if (news) {
-			if (news.length > (previousState?.current?.length || 0)) {
-				console.log("something updated.");
-			}
-
-			previousState.current = news as any;
-		}
-	}, [news]);
 
 	return (
 
@@ -160,33 +149,7 @@ const LandingPage = () => {
 						}}>
 						<SourceSelection></SourceSelection>
 
-						<SearchBar />
-						{
-							news && (news as any as News[]).sort((a, b) => {
-									const i = new Date(a.source_date);
-									const j = new Date(b.source_date);
-									if (i > j) {
-										return -1;
-									} else if (i < j) {
-										return 1;
-									} else {
-										return 0;
-									}
-								})
-							.map((e) => (
-								<NewsCard
-									news_id={e.id}
-									title={e.title}
-									content={e.content}
-									source_date={e.source_date}
-									source_url={e.source_url}
-									source_icon_url="https://source.unsplash.com/random/400x200"
-									source_name={e.source_name}
-									keywords={e.keywords}
-									is_positive={!!e.is_positive}
-								/>
-							))
-						}
+						<LeftPanel />
 					</Container>
 					<Container
 						className="landing-page-container"
