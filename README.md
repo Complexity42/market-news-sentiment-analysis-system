@@ -1,6 +1,8 @@
 # CityHack22 Project Submission
+
 ## Project: Elon Stocker
 
+![logo](/assets/icon.png)
 
 ## Team: Complexity42
 ## Members
