@@ -18,14 +18,26 @@ import { getAuth, User } from "firebase/auth";
 import { collection, query, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { News } from "../../types/News";
+import UserStore from "../../mobx/UserStore";
+import { User as UserType } from "../../types/User";
+import SourceSelection from "../../components/SourceSelection";
 
-const LandingPage = observer(() => {
+const LandingPage = () => {
 	const auth = useMemo(() => getAuth(), []);
 	const [userProfile, loading, error] = useAuthState(auth);
 
 	const db = useMemo(() => getFirestore(), []);
 	const collectionRef = useMemo(() => collection(db, 'News'), []);
 	const [news, isNewsLoading, isNewsError] = useCollectionData(query(collectionRef), {idField: 'id'});
+
+	const userCollectionRef = useMemo(() => collection(db, 'User'), []);
+	const [users, isUsersLoading, isUsersError] = useCollectionData(query(userCollectionRef), {idField: 'id'});
+
+	useEffect(() => {
+		if (users) {
+			UserStore.updateUsers(users as any as UserType[]);
+		}
+	}, [users]);
 
 	// user state
 	const [user, setUser] = useState<IProfile>({
@@ -146,6 +158,8 @@ const LandingPage = observer(() => {
 						sx={{
 							backgroundColor: 'white'
 						}}>
+						<SourceSelection></SourceSelection>
+
 						<SearchBar />
 						{
 							news && (news as any as News[]).sort((a, b) => {
@@ -238,6 +252,6 @@ const LandingPage = observer(() => {
 			</Backdrop>
 		</div >
 	);
-});
+};
 
 export default LandingPage;
