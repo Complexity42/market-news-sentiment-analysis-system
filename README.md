@@ -1,5 +1,5 @@
 # CityHack22 Project Submission
-## Project: <>
+## Project: market-news-sentiment-analysis-system
 
 
 ## Team: Complexity42
@@ -21,8 +21,9 @@
 
 ## Tech used (as many as required)
 1. React
-2. < Tech >
-3. < Tech >
+1. Firebase
+2. selenium, BeautifulSoup4, feedparser, yfinance
+3. 
 4. < Tech >
 
 ## Link
