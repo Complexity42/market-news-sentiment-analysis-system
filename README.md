@@ -4,6 +4,8 @@
 
 ![logo](/assets/icon.png)
 
+Demo video: https://youtu.be/foSqLpRIAc8
+
 ## Team: Complexity42
 ## Members
 - YEUNG Ho Ching (Leader)
