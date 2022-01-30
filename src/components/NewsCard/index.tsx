@@ -20,6 +20,9 @@ import CommentSectionCard from "../CommentSectionCard";
 import { where } from "firebase/firestore";
 import { collection, query, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
 import { useCollectionData } from 'react-firebase-hooks/firestore';
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 
 interface INewsCardProps {
     // for passing the reference for rating and bookmarking.
@@ -50,6 +53,17 @@ const NewsCard = (props: INewsCardProps) => {
     const toggleCommentSection = useCallback((e: MouseEvent) => {
         setShowingCommentSection(!isShowingCommentSection);
     }, [isShowingCommentSection]);
+
+    const [isBookmarkActive, setBookmarkActive] = useState(false);
+
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     return (
         <Box sx={{ maxWidth: "500px;", mb: '1.7rem' }}>
@@ -110,12 +124,28 @@ const NewsCard = (props: INewsCardProps) => {
                                         <AddCommentOutlinedIcon />
                                     )}
                                 </IconButton>
-                                <IconButton>
-                                    <BookmarkBorderOutlinedIcon />
+                                <IconButton onClick={() => setBookmarkActive(!isBookmarkActive)}>
+                                    {
+                                        isBookmarkActive ?  <BookmarkIcon color="primary"/> : <BookmarkBorderOutlinedIcon />
+                                    }
                                 </IconButton>
-                                <IconButton>
-                                    <FilterAltOutlinedIcon />
+                                <IconButton onClick={handleClick}>
+                                    {
+                                        open ?  <FilterAltOutlinedIcon color="primary"/> : <FilterAltOutlinedIcon/>
+                                    }
                                 </IconButton>
+                                <Menu
+                                    id="basic-menu"
+                                    anchorEl={anchorEl}
+                                    open={open}
+                                    onClose={handleClose}
+                                    MenuListProps={{
+                                        'aria-labelledby': 'basic-button',
+                                    }}
+                                >
+                                    <MenuItem onClick={handleClose}>Not interested</MenuItem>
+                                    <MenuItem onClick={handleClose}>Share</MenuItem>
+                                </Menu>
                             </Stack>
                         </Stack>
                     </CardActions>
