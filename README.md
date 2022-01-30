@@ -22,7 +22,6 @@ Designated for beginners investors and lenders, gather the decentralized sources
 
 ## Tech used (as many as required)
 1. React
-<<<<<<< HEAD
 2. Firebase
 3. TypeScript
 4. Python
@@ -30,12 +29,10 @@ Designated for beginners investors and lenders, gather the decentralized sources
 6. Web Scraping
 7. Sentiment Analysis
 8. NLP
-=======
-1. Firebase
-2. selenium, BeautifulSoup4, feedparser, yfinance
-3. 
-4. < Tech >
->>>>>>> 8f4dd069508b42fd90102dae32e65d2466f2a0bc
+9. selenium
+10. BeautifulSoup4
+11. feedparser
+12. yfinance
 
 ## Link
 
@@ -58,5 +55,3 @@ Designated for beginners investors and lenders, gather the decentralized sources
 - Natural Language Toolkit https://www.nltk.org/
 
 - Mobx https://mobx.js.org/
-
-- yFinance https://pypi.org/project/yfinance/
